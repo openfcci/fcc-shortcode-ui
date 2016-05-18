@@ -200,6 +200,12 @@ function fcc_shortcode_ui_jw_player() {
 						'data-test'   => 1,
 					),
 				),
+        array(
+					'label'       => __( 'Disable Autostart?', 'shortcode-ui' ),
+          'description'  => 'Check this on any video after the first when embedding more than one video in a post to prevent multiple videos playing at the same time.',
+					'attr'        => 'disable_autostart',
+					'type'        => 'checkbox',
+				),
 			),
 		)
 	);
