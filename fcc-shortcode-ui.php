@@ -243,33 +243,48 @@ function shortcode_ui_dev_shortcode( $attr, $content = '', $shortcode_tag ) {
 }
 
 /**
- * Render the shortcode based on supplied attributes
+ * JW Player Video Embed
+ *
+ * @author Ryan Veitch <ryan.veitch@forumcomm.com>
+ * @since 1.16.02.23
+ * @version 1.16.05.18
  */
 function fcc_shortcode_jw_player( $attr, $content = '', $shortcode_tag ) {
 
-	$attr = shortcode_atts( array(
-		'key'     => '',
-		'attachment' => 0,
-		'key'     => null,
-	), $attr, $shortcode_tag );
+ 	$attr = shortcode_atts( array(
+ 		'key'     => '',
+ 		'attachment' => 0,
+ 		'key'     => null,
+ 	), $attr, $shortcode_tag );
 
-	ob_start();
+ 	ob_start(); // Start Output Buffer
 
-	if ( is_admin() ) { echo '<div align="center" class="fccjwplayer" style="max-width: 650px;">'; }
+   $video_key = wp_kses_post( $attr[ 'key' ] );
+   $player_key = 'XmRneLwC';
+   $autostart = 'false';
 
-	?>
+ 	if ( is_admin() ) { echo '<div align="center" class="fccjwplayer" style="max-width: 650px;">'; }
+   echo '
+   <script src="//content.jwplatform.com/libraries/'.$player_key.'.js"></script>
+   <script type="text/javascript">
+   var playerInstance = jwplayer("'.$video_key.'");
+   playerInstance.setup({
+   	file: "//content.jwplatform.com/videos/'.$video_key.'.mp4",
+   	image: "http://assets-jpcust.jwpsrv.com/thumbs/'.$video_key.'.jpg",
+   	autostart: '.$autostart.',
+   });
+   </script>
+   ';
+ 	if ( is_admin() ) { echo '</div>'; }
 
-	<script type="text/javascript" src="http://content.jwplatform.com/players/<?php echo wp_kses_post( $attr[ 'key' ] ); ?>-XmRneLwC.js"></script>
+ 	return ob_get_clean(); // End Output Buffer
+}
 
-	<?php
+/*--------------------------------------------------------------
+# SCRIBBLE LIVE
+--------------------------------------------------------------*/
 
-	if ( is_admin() ) { echo '</div>'; }
-
-	return ob_get_clean();
-
-} // End function fcc_shortcode_jw_player
-
-/* SCRIBBLE LIVE FORMAT
+/* SCRIBBLE LIVE FORMAT (For Later Use)
 
 <div class="scrbbl-embed" data-src="/event/1717426"></div>
 
