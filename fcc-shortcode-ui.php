@@ -200,6 +200,13 @@ function fcc_shortcode_ui_jw_player() {
 						'data-test'   => 1,
 					),
 				),
+        array(
+          'label'       => esc_html__( 'Disable Autostart?', 'shortcode-ui' ),
+          'description' => 'Select this on any video after the first when embedding more than one video in a post to prevent multiple videos
+          playing at the same time.',
+          'attr'        => 'disable_autostart',
+          'type'        => 'checkbox',
+        ),
 			),
 		)
 	);
@@ -245,6 +252,7 @@ function fcc_shortcode_jw_player( $attr, $content = '', $shortcode_tag ) {
 		'key'     => '',
 		'attachment' => 0,
 		'key'     => null,
+    'disable_autostart' => 0
 	), $attr, $shortcode_tag );
 
 	ob_start();
@@ -253,9 +261,27 @@ function fcc_shortcode_jw_player( $attr, $content = '', $shortcode_tag ) {
 
 	?>
 
-	<script type="text/javascript" src="http://content.jwplatform.com/players/<?php echo wp_kses_post( $attr[ 'key' ] ); ?>-XmRneLwC.js"></script>
+    <script type="text/javascript" src="//content.jwplatform.com/libraries/XmRneLwC.js"></script>
 
-	<?php
+    <div id="<?php echo wp_kses_post( $attr[ 'key' ] ); ?>">Loading the player...</div>
+
+    <script type="text/javascript">
+      var playerInstance = jwplayer("<?php echo wp_kses_post( $attr[ 'key' ] ); ?>");
+      playerInstance.setup({
+      	file: "//content.jwplatform.com/videos/<?php echo wp_kses_post( $attr[ 'key' ] ); ?>.mp4",
+      	image: "http://assets-jpcust.jwpsrv.com/thumbs/<?php echo wp_kses_post( $attr[ 'key' ] ); ?>.jpg",
+        <?php
+          //If Disable Autostart is checked, Don't Autostart the video
+          if($attr[ 'disable_autostart' ]){
+            echo "autostart: false";
+          }else{
+            echo "autostart: true";
+          }
+        ?>
+      });
+    </script>
+
+  <?php
 
 	if ( is_admin() ) { echo '</div>'; }
 
@@ -279,3 +305,4 @@ function fcc_shortcode_jw_player( $attr, $content = '', $shortcode_tag ) {
 </script>
 
 */
+//Register Settings
