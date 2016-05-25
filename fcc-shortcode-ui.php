@@ -201,8 +201,10 @@ function fcc_shortcode_ui_jw_player() {
 					),
 				),
         array(
-          'label'       => esc_html__( 'Autostart', 'shortcode-ui' ),
-          'attr'        => 'autostart',
+          'label'       => esc_html__( 'Disable Autostart?', 'shortcode-ui' ),
+          'description' => 'Select this on any video after the first when embedding more than one video in a post to prevent multiple videos
+          playing at the same time.',
+          'attr'        => 'disable_autostart',
           'type'        => 'checkbox',
         ),
 			),
@@ -250,7 +252,7 @@ function fcc_shortcode_jw_player( $attr, $content = '', $shortcode_tag ) {
 		'key'     => '',
 		'attachment' => 0,
 		'key'     => null,
-    'autostart' => 0
+    'disable_autostart' => 0
 	), $attr, $shortcode_tag );
 
 	ob_start();
@@ -269,11 +271,11 @@ function fcc_shortcode_jw_player( $attr, $content = '', $shortcode_tag ) {
       	file: "//content.jwplatform.com/videos/<?php echo wp_kses_post( $attr[ 'key' ] ); ?>.mp4",
       	image: "http://assets-jpcust.jwpsrv.com/thumbs/<?php echo wp_kses_post( $attr[ 'key' ] ); ?>.jpg",
         <?php
-          //If Autostart is checked, Autostart the video
-          if($attr[ 'autostart' ]){
-            echo "autostart: true";
-          }else{
+          //If Disable Autostart is checked, Don't Autostart the video
+          if($attr[ 'disable_autostart' ]){
             echo "autostart: false";
+          }else{
+            echo "autostart: true";
           }
         ?>
       });
