@@ -115,7 +115,7 @@ function fcc_shortcode_jw_player( $attr, $content = '', $shortcode_tag ) {
 	 	ob_start(); // Start Output Buffer
 
 		$video_key = wp_kses_post( $attr['key'] );
-		$player_key = 'XmRneLwC';
+		$player_key = 'XmRneLwC'; // TODO Make key a dynamic field?
 		if ( 'true' == $attr['disable_autostart'] ) {
 			$autostart = 'false'; // Disable Autostart
 		} else {
@@ -124,22 +124,25 @@ function fcc_shortcode_jw_player( $attr, $content = '', $shortcode_tag ) {
 
 	 	if ( is_admin() ) { echo '<div align="center" class="fccjwplayer" style="max-width: 650px;">'; }
 		echo '
-	   <script src="//content.jwplatform.com/libraries/'.$player_key.'.js"></script>
+	   <script src="https://content.jwplatform.com/libraries/'.$player_key.'.js"></script>
 	   <div id="'.$video_key.'">Loading the player...</div>
 	   <script type="text/javascript">
 	   var playerInstance = jwplayer("'.$video_key.'");
 	   playerInstance.setup({
-	   	file: "//content.jwplatform.com/videos/'.$video_key.'.mp4",
-	   	image: "http://assets-jpcust.jwpsrv.com/thumbs/'.$video_key.'.jpg",
+			mediaid: '.$video_key.',
+	   	file: "https://content.jwplatform.com/videos/'.$video_key.'.mp4",
+	   	image: "https://assets-jpcust.jwpsrv.com/thumbs/'.$video_key.'.jpg",
 	   	autostart: '.$autostart.',
 	   });
+		 console.log("JW Player Mode: " + playerInstance.getRenderingMode());
 	   </script>
 	   ';
 	 	if ( is_admin() ) { echo '</div>'; }
 
 	 	return ob_get_clean(); // End Output Buffer
 }
-
+//playerInstance.getRenderingMode()
+//https://content.jwplatform.com/related6/[object%20HTMLDivElement].xml
 /*--------------------------------------------------------------
 # SCRIBBLE LIVE
 --------------------------------------------------------------*/
