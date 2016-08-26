@@ -101,7 +101,7 @@ add_action( 'register_shortcode_ui', 'fcc_shortcode_ui_jw_player' );
  *
  * @author Ryan Veitch <ryan.veitch@forumcomm.com>
  * @since 1.16.02.23
- * @version 1.16.05.18
+ * @version 1.16.08.26
  */
 function fcc_shortcode_jw_player( $attr, $content = '', $shortcode_tag ) {
 
@@ -129,7 +129,6 @@ function fcc_shortcode_jw_player( $attr, $content = '', $shortcode_tag ) {
 	   <script type="text/javascript">
 	   var playerInstance = jwplayer("'.$video_key.'");
 	   playerInstance.setup({
-			mediaid: '.$video_key.',
 	   	file: "https://content.jwplatform.com/videos/'.$video_key.'.mp4",
 	   	image: "https://assets-jpcust.jwpsrv.com/thumbs/'.$video_key.'.jpg",
 	   	autostart: '.$autostart.',
@@ -141,8 +140,7 @@ function fcc_shortcode_jw_player( $attr, $content = '', $shortcode_tag ) {
 
 	 	return ob_get_clean(); // End Output Buffer
 }
-//playerInstance.getRenderingMode()
-//https://content.jwplatform.com/related6/[object%20HTMLDivElement].xml
+
 /*--------------------------------------------------------------
 # SCRIBBLE LIVE
 --------------------------------------------------------------*/
