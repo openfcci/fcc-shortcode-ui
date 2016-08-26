@@ -25,7 +25,7 @@
  */
 add_action( 'init', 'fcc_shortcode_ui_detection' );
 function fcc_shortcode_ui_detection() {
-	if ( !function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
+	if ( ! function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
 		add_action( 'admin_notices', 'fcc_shortcode_ui_notices' );
 	}
 }
@@ -105,39 +105,39 @@ add_action( 'register_shortcode_ui', 'fcc_shortcode_ui_jw_player' );
  */
 function fcc_shortcode_jw_player( $attr, $content = '', $shortcode_tag ) {
 
- 	$attr = shortcode_atts( array(
- 		'key'               => '',
- 		'attachment'        => 0,
- 		'key'               => null,
-    'disable_autostart' => '',
- 	), $attr, $shortcode_tag );
+	 	$attr = shortcode_atts( array(
+	 		'key'               => '',
+	 		'attachment'        => 0,
+	 		'key'               => null,
+			'disable_autostart' => '',
+	 	), $attr, $shortcode_tag );
 
- 	ob_start(); // Start Output Buffer
+	 	ob_start(); // Start Output Buffer
 
-   $video_key = wp_kses_post( $attr[ 'key' ] );
-   $player_key = 'XmRneLwC';
-   if ( $attr[ 'disable_autostart' ] == 'true' ) {
-     $autostart = 'false'; // Disable Autostart
-   } else {
-     $autostart = 'true'; // Enable Autostart
-   }
+		$video_key = wp_kses_post( $attr['key'] );
+		$player_key = 'XmRneLwC';
+		if ( 'true' == $attr['disable_autostart'] ) {
+			$autostart = 'false'; // Disable Autostart
+		} else {
+			$autostart = 'true'; // Enable Autostart
+		}
 
- 	if ( is_admin() ) { echo '<div align="center" class="fccjwplayer" style="max-width: 650px;">'; }
-   echo '
-   <script src="//content.jwplatform.com/libraries/'.$player_key.'.js"></script>
-   <div id="'.$video_key.'">Loading the player...</div>
-   <script type="text/javascript">
-   var playerInstance = jwplayer("'.$video_key.'");
-   playerInstance.setup({
-   	file: "//content.jwplatform.com/videos/'.$video_key.'.mp4",
-   	image: "http://assets-jpcust.jwpsrv.com/thumbs/'.$video_key.'.jpg",
-   	autostart: '.$autostart.',
-   });
-   </script>
-   ';
- 	if ( is_admin() ) { echo '</div>'; }
+	 	if ( is_admin() ) { echo '<div align="center" class="fccjwplayer" style="max-width: 650px;">'; }
+		echo '
+	   <script src="//content.jwplatform.com/libraries/'.$player_key.'.js"></script>
+	   <div id="'.$video_key.'">Loading the player...</div>
+	   <script type="text/javascript">
+	   var playerInstance = jwplayer("'.$video_key.'");
+	   playerInstance.setup({
+	   	file: "//content.jwplatform.com/videos/'.$video_key.'.mp4",
+	   	image: "http://assets-jpcust.jwpsrv.com/thumbs/'.$video_key.'.jpg",
+	   	autostart: '.$autostart.',
+	   });
+	   </script>
+	   ';
+	 	if ( is_admin() ) { echo '</div>'; }
 
- 	return ob_get_clean(); // End Output Buffer
+	 	return ob_get_clean(); // End Output Buffer
 }
 
 /*--------------------------------------------------------------
