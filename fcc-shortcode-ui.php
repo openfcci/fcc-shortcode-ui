@@ -43,6 +43,7 @@ function fcc_shortcode_ui_notices() {
 function shortcode_ui_fcc_register_shortcodes() {
 	add_shortcode( 'fcc_jw_player', 'fcc_shortcode_jw_player' );
 	add_shortcode( 'fcc_scribblelive', 'fcc_shortcode_scribblelive' );
+	add_shortcode( 'fcc_ustream', 'fcc_shortcode_ustream' );
 }
 add_action( 'init', 'shortcode_ui_fcc_register_shortcodes' );
 
@@ -159,7 +160,7 @@ function fcc_shortcode_ui_scribble() {
 	$slhelp = '<img src="' . plugin_dir_url( __FILE__ ) . 'img/sl_help.png' . '">' ;
 
 	/**
-	 * Register UI for your shortcode
+	 * Register UI for ScribbleLive shortcode
 	 *
 	 * @param string $shortcode_tag
 	 * @param array $ui_args
@@ -199,44 +200,98 @@ function fcc_shortcode_scribblelive( $attr, $content = '', $shortcode_tag ) {
 
 	 	$attr = shortcode_atts( array(
 	 		'eventid'           => '',
-	 		'attachment'        => 0,
-	 		'key'               => null,
-			'disable_autostart' => '',
 		), $attr, $shortcode_tag );
 
 		ob_start(); // Start Output Buffer
 
-	 //$event_id = wp_kses_post( $attr['eventid'] );//
-	 $event_id = '1717426';
-	 /*if ( $attr[ 'disable_autostart' ] == 'true' ) {
-	   $autostart = 'false'; // Disable Autostart
-	 } else {
-	   $autostart = 'true'; // Enable Autostart
-	 }*/
-	 // [fcc_scribblelive eventid="1717426"]
+		$event_id = wp_kses_post( $attr['eventid'] );//
 
-	 echo '
-	 <div class="scrbbl-embed" data-src="/event/2298910"></div>
-	 <script>(function(d, s, id) {var js,ijs=d.getElementsByTagName(s)[0];if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.src="//embed.scribblelive.com/widgets/embed.js";ijs.parentNode.insertBefore(js, ijs);}(document, "script", "scrbbl-js"));</script>
-	 ';
+		echo '
+		 <div class="scrbbl-embed" data-src="/event/'.$event_id.'"></div>
+		 <script>
+		 (function(d, s, id) {
+		   var js, ijs = d.getElementsByTagName(s)[0];
+		   if (d.getElementById(id)) return;
+		   js = d.createElement(s);
+		   js.id = id;
+		   js.src = "//embed.scribblelive.com/widgets/embed.js";
+		   ijs.parentNode.insertBefore(js, ijs);
+		 }(document, "script", "scrbbl-js"));
+		 </script>
+		 ';
 
 		return ob_get_clean(); // End Output Buffer
 }
 
+/*--------------------------------------------------------------
+# Ustream
+--------------------------------------------------------------*/
 
-/* ScribbleLive FORMAT (For Later Use)
+/**
+ * Ustream Embed - UI Functions
+ *
+ * @author Ryan Veitch <ryan.veitch@forumcomm.com>
+ * @since 1.16.08.26
+ * @version 1.16.08.26
+ */
+function fcc_shortcode_ui_ustream() {
 
-<div class="scrbbl-embed" data-src="/event/1717426"></div>
+	$ustream_logo = '<img src="' . plugin_dir_url( __FILE__ ) . 'img/ustream.svg' . '">' ;
+	$ustream_help = '<img src="' . plugin_dir_url( __FILE__ ) . 'img/us_help.png' . '">' ;
 
-<script>
-(function(d, s, id) {
-  var js, ijs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s);
-  js.id = id;
-  js.src = "//embed.scribblelive.com/widgets/embed.js";
-  ijs.parentNode.insertBefore(js, ijs);
-}(document, 'script', 'scrbbl-js'));
-</script>
+	/**
+	 * Register UI for Ustream shortcode
+	 *
+	 * @param string $shortcode_tag
+	 * @param array $ui_args
+	 * @since 1.16.08.26
+	 * @version 1.16.08.26
+	 */
+	shortcode_ui_register_for_shortcode( 'fcc_ustream',
+		array(
+			'label' => esc_html__( 'Ustream Embed', 'shortcode-ui' ),
+			'listItemImage' => $ustream_logo,
+			'attrs' => array(
+				array(
+					'label'  => esc_html__( 'Ustream Content ID', 'shortcode-ui' ),
+					'description'  => '<br>Enter the content ID for the stream embed.<br>'  . $ustream_help,
+					'attr'   => 'contentid',
+					'type'   => 'text',
+					'encode' => true,
+					'value' => '13746121',
+					'meta'   => array(
+						'placeholder' => esc_html__( 'Example: 13746121', 'shortcode-ui' ),
+						'data-test'   => 1,
+					),
+				),
+			),
+		)
+	);
+}
+add_action( 'register_shortcode_ui', 'fcc_shortcode_ui_ustream' );
 
-*/
+/**
+ * Ustream Embed (Callback Function)
+ *
+ * @author Ryan Veitch <ryan.veitch@forumcomm.com>
+ * @since 1.16.08.29
+ * @version 1.16.08.29
+ */
+function fcc_shortcode_ustream( $attr, $content = '', $shortcode_tag ) {
+
+	 	$attr = shortcode_atts( array(
+	 		'contentid' => '',
+			'toggle' => true,
+		), $attr, $shortcode_tag );
+
+		ob_start(); // Start Output Buffer
+
+		$content_id = wp_kses_post( $attr['contentid'] );
+		$toggle = $attr['toggle']; // TODO add enable/disable toggle functionality?
+
+		echo '
+		 <iframe src="http://www.ustream.tv/combined-embed/' . $content_id . '?social=0&amp;videos=0&amp;html5ui&amp;autoplay=true&amp;showtitle=false" style="border: 0 none transparent;" webkitallowfullscreen allowfullscreen frameborder="no" width="640" height="360></iframe>
+		 ';
+
+		return ob_get_clean(); // End Output Buffer
+}
