@@ -42,6 +42,7 @@ function fcc_shortcode_ui_notices() {
 
 function shortcode_ui_fcc_register_shortcodes() {
 	add_shortcode( 'fcc_jw_player', 'fcc_shortcode_jw_player' );
+	add_shortcode( 'fcc_scribblelive', 'fcc_shortcode_scribblelive' );
 }
 add_action( 'init', 'shortcode_ui_fcc_register_shortcodes' );
 
@@ -142,10 +143,88 @@ function fcc_shortcode_jw_player( $attr, $content = '', $shortcode_tag ) {
 }
 
 /*--------------------------------------------------------------
-# SCRIBBLE LIVE
+# ScribbleLive
 --------------------------------------------------------------*/
 
-/* SCRIBBLE LIVE FORMAT (For Later Use)
+/**
+ * ScribbleLive Embed - UI Functions
+ *
+ * @author Ryan Veitch <ryan.veitch@forumcomm.com>
+ * @since 1.16.08.26
+ * @version 1.16.08.26
+ */
+function fcc_shortcode_ui_scribble() {
+
+	$scribble_logo = '<img src="' . plugin_dir_url( __FILE__ ) . 'img/sl_logo_gray.svg' . '">' ;
+	$slhelp = '<img src="' . plugin_dir_url( __FILE__ ) . 'img/sl_help.png' . '">' ;
+
+	/**
+	 * Register UI for your shortcode
+	 *
+	 * @param string $shortcode_tag
+	 * @param array $ui_args
+	 * @since 1.16.08.26
+	 * @version 1.16.08.26
+	 */
+	shortcode_ui_register_for_shortcode( 'fcc_scribblelive',
+		array(
+			'label' => esc_html__( 'ScribbleLive Embed', 'shortcode-ui' ),
+			'listItemImage' => $scribble_logo,
+			'attrs' => array(
+				array(
+					'label'  => esc_html__( 'ScribbleLive Event ID', 'shortcode-ui' ),
+					'description'  => '<br>Copy the event ID from the url in the ScribbleLive dashboard.: <br>' . $slhelp,
+					'attr'   => 'eventid',
+					'type'   => 'text',
+					'encode' => true,
+					'meta'   => array(
+						'placeholder' => esc_html__( 'Example: 1717426', 'shortcode-ui' ),
+						'data-test'   => 1,
+					),
+				),
+			),
+		)
+	);
+}
+add_action( 'register_shortcode_ui', 'fcc_shortcode_ui_scribble' );
+
+/**
+ * ScribbleLive Embed (Callback Function)
+ *
+ * @author Ryan Veitch <ryan.veitch@forumcomm.com>
+ * @since 1.16.08.26
+ * @version 1.16.08.26
+ */
+function fcc_shortcode_scribblelive( $attr, $content = '', $shortcode_tag ) {
+
+	 	$attr = shortcode_atts( array(
+	 		'eventid'           => '',
+	 		'attachment'        => 0,
+	 		'key'               => null,
+			'disable_autostart' => '',
+		), $attr, $shortcode_tag );
+
+		ob_start(); // Start Output Buffer
+
+	 //$event_id = wp_kses_post( $attr['eventid'] );//
+	 $event_id = '1717426';
+	 /*if ( $attr[ 'disable_autostart' ] == 'true' ) {
+	   $autostart = 'false'; // Disable Autostart
+	 } else {
+	   $autostart = 'true'; // Enable Autostart
+	 }*/
+	 // [fcc_scribblelive eventid="1717426"]
+
+	 echo '
+	 <div class="scrbbl-embed" data-src="/event/2298910"></div>
+	 <script>(function(d, s, id) {var js,ijs=d.getElementsByTagName(s)[0];if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.src="//embed.scribblelive.com/widgets/embed.js";ijs.parentNode.insertBefore(js, ijs);}(document, "script", "scrbbl-js"));</script>
+	 ';
+
+		return ob_get_clean(); // End Output Buffer
+}
+
+
+/* ScribbleLive FORMAT (For Later Use)
 
 <div class="scrbbl-embed" data-src="/event/1717426"></div>
 
