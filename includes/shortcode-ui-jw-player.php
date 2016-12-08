@@ -94,7 +94,8 @@ function fcc_shortcode_jw_player( $attr, $content = '', $shortcode_tag ) {
 	}
 
 	$ad_unit = '/7021/fcc.forum';
-	$tag = 'football';
+	$keywords = array();
+	$keywords[] = 'blog_' . get_current_blog_id();
 
 	foreach ( get_the_category( $post->ID ) as $category ) {
 		$keywords[] = str_replace( "'", '', str_replace( '&', 'and', htmlspecialchars_decode( $category->name ) ) );
