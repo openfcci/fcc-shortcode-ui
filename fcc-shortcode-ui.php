@@ -7,7 +7,7 @@
  * Author URI:  http://www.forumcomm.com/
  * License:     GPL v2 or later
  * Text Domain: shortcode-ui
- * Version:     2.16.10.25
+ * Version:     2.16.12.08
  */
 
 /*
